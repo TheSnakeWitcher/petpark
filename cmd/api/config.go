@@ -1,0 +1,67 @@
+package main
+
+import (
+	"github.com/rs/zerolog"
+	"github.com/spf13/viper"
+
+	"errors"
+	"os"
+)
+
+const (
+	ConfigPathDev string = "/home/mr-papi/SoftwareCode/Projects/pet-park/"
+	ConfigPathSystem string = "/etc/"
+	ConfigPathUser   string = "/home/mr-papi/.config/"
+	ConfigFileName string = "petpark.conf"
+	ConfigFileType string = "toml"
+)
+
+type configuration struct {
+	LogFile    string `mapstructure:"LogFile"`
+	DbDriver   string `mapstructure:"DbDriver"`
+	DbHost     string `mapstructure:"DbHost"`
+	DbPort     int8   `mapstructure:"DbPort"`
+	DbUser     string `mapstructure:"DbUser"`
+	DbPassword string `mapstructure:"DbPassword"`
+	DbName     string `mapstructure:"DbName"`
+	DbUri      string `mapstructure:"DbUri"`
+	ServerHost string `mapstructure:"ServerHost"`
+	ServerPort string `mapstructure:"ServerPort"`
+}
+
+var (
+	Config configuration
+	LogFile *os.File
+	Logger  zerolog.Logger
+)
+
+func InitConfig() (err error) {
+	viper.SetConfigName(ConfigFileName)
+	viper.SetConfigType(ConfigFileType)
+	viper.AddConfigPath(ConfigPathDev)
+	viper.AddConfigPath(ConfigPathSystem)
+	viper.AddConfigPath(ConfigPathUser)
+
+	err = viper.ReadInConfig()
+	if err != nil {
+		panic(errors.New("failed to load config file"))
+	}
+
+	err = viper.Unmarshal(&Config)
+	if err != nil {
+		panic(errors.New("failed to save config"))
+	}
+
+	return nil
+}
+
+func InitLogger() (err error) {
+	LogFile, err = os.OpenFile(Config.LogFile, os.O_WRONLY|os.O_APPEND, os.ModePerm)
+	if err != nil {
+		panic(errors.New("failed to open logfile"))
+	}
+
+	fileWriter := zerolog.New(LogFile).With().Logger()
+	Logger = zerolog.New(fileWriter).With().Timestamp().Logger()
+	return nil
+}
