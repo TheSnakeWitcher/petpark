@@ -1,10 +1,15 @@
 -- migrate:up
 CREATE TABLE pets (
-    id       INT PRIMARY KEY,
-    name     VARCHAR(20),
-    picked   DATE,
-    location TEXT,
-    data     JSON
+
+    -- auto
+    id       UUID PRIMARY KEY DEFAULT uuid_generate_v4() NOT NULL,
+
+    -- required
+    picked   DATE NOT NULL,
+    address  TEXT NOT NULL,
+    contact  VARCHAR(20) NOT NULL,
+    details  TEXT NOT NULL
+
 ) ;
 
 -- migrate:down
