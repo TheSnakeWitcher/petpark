@@ -3,14 +3,13 @@ package http
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 
-	"github.com/TheSnakeWitcher/petplanet/pets"
+	"github.com/TheSnakeWitcher/PetPark/pets"
 	"github.com/labstack/echo/v4"
 )
 
 
-func Home(ctx echo.Context) error {
+func Root(ctx echo.Context) error {
     return ctx.String(http.StatusOK,"welcome")
 }
 
@@ -27,36 +26,39 @@ func ListPets(svc pets.Service) echo.HandlerFunc {
 
 func GetPet(svc pets.Service) echo.HandlerFunc {
     return func(ctx echo.Context) error {
-        id ,err := strconv.Atoi(ctx.Param("id"))
+        id := ctx.Param("id")
+        pet , err := svc.GetPet(ctx.Request().Context(),id)
         if err != nil {
+            ctx.Logger().Error(err)
             ctx.JSON(http.StatusNotModified,fmt.Sprintf("\"error\": \"%s\"",err))
         }
-
-        var pet pets.Pet
-        pet , err = svc.GetPet(ctx.Request().Context(),int32(id))
         return ctx.JSON(http.StatusOK,pet)
     }
 }
 
 func AddPet(svc pets.Service) echo.HandlerFunc {
     return func(ctx echo.Context) error {
-        name := ctx.QueryParam("name")
-        loc := ctx.QueryParam("location")
-        pet , err := svc.AddPet(ctx.Request().Context(),name,loc)
+        var petParams pets.AddPetParams
+        ctx.Bind(&petParams)
+        fmt.Println("pets:\n",petParams)
+
+        pet , err := svc.AddPet(ctx.Request().Context(),petParams)
         if err != nil {
+            ctx.Logger().Error(err)
             ctx.String(http.StatusNotImplemented,fmt.Sprintf(" \"error\" : \"%s\" ",err))
         }
+
         return ctx.JSON(http.StatusOK,pet)
     }
 }
 
 func DelPet(svc pets.Service) echo.HandlerFunc {
     return func(ctx echo.Context) error {
-        id ,err := strconv.Atoi(ctx.Param("id"))
+        id := ctx.Param("id")
+        err := svc.DelPet(ctx.Request().Context(),id)
         if err != nil {
             ctx.JSON(http.StatusNotModified,fmt.Sprintf("\"error\": \"%s\"",err))
         }
-        svc.DelPet(ctx.Request().Context(),int32(id))
-        return ctx.JSON(http.StatusOK,fmt.Sprintf("\"id\" : \"%d\"",id))
+        return ctx.JSON(http.StatusOK,fmt.Sprintf("\"id\" : \"%s\"",id))
     }
 }
