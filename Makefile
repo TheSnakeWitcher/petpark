@@ -13,13 +13,15 @@ build:
 
 build-linux:
 	go env -w GOOS=linux && go build -o $(BIN)/ ./...
+	mv $(BIN)/api $(BIN)/petpark
 
 build-windows:
 	go env -w GOOS=windows && go build -o $(BIN)/ ./...
+	mv $(BIN)/api.exe $(BIN)/petpark.exe
 
 clean:
-	make clean_linux
 	make clean_windows
+	make clean_linux
 
 clean-linux:
 	rm ./$(BIN)/$(APP)
