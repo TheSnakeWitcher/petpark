@@ -1,8 +1,11 @@
+// TODO: implement super tokens auth integrations
 package main
 
 import (
-	"github.com/TheSnakeWitcher/petplanet/internal/http"
-	"github.com/TheSnakeWitcher/petplanet/pets"
+	"time"
+	"github.com/TheSnakeWitcher/PetPark/internal/http"
+	"github.com/TheSnakeWitcher/PetPark/pets"
+	mw "github.com/labstack/echo/v4/middleware"
 )
 
 var (
@@ -29,13 +32,14 @@ func init() {
 
 func main() {
 	Logger.Trace().Msg("execution starts")
-	defer db.Close()
 	defer LogFile.Close()
+	defer db.Close()
 
-    initDB()
     svc := pets.NewService(db)
     srv := http.NewServer(*svc)
-    srv.Logger.Fatal(srv.Start(":" + Config.ServerPort))
-
+    srv.Use(mw.TimeoutWithConfig(mw.TimeoutConfig{
+        Timeout: Config.BaseTimeout + time.Second,
+    }))
+    srv.Logger.Fatal(srv.Start(Config.ServerHost + ":" +  Config.ServerPort))
 	Logger.Trace().Msg("execution ends")
 }
