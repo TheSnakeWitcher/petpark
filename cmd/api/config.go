@@ -1,15 +1,16 @@
 package main
 
 import (
-	"github.com/rs/zerolog"
-	"github.com/spf13/viper"
-
+	"time"
 	"errors"
 	"os"
+
+	"github.com/rs/zerolog"
+	"github.com/spf13/viper"
 )
 
 const (
-	ConfigPathDev string = "/home/mr-papi/SoftwareCode/Projects/pet-park/"
+	ConfigPathDev string = "/home/mr-papi/SoftwareCode/Projects/PetPark/"
 	ConfigPathSystem string = "/etc/"
 	ConfigPathUser   string = "/home/mr-papi/.config/"
 	ConfigFileName string = "petpark.conf"
@@ -19,14 +20,16 @@ const (
 type configuration struct {
 	LogFile    string `mapstructure:"LogFile"`
 	DbDriver   string `mapstructure:"DbDriver"`
+	DbProtocol string `mapstructure:"DbProtocol"`
 	DbHost     string `mapstructure:"DbHost"`
-	DbPort     int8   `mapstructure:"DbPort"`
+	DbPort     int32  `mapstructure:"DbPort"`
 	DbUser     string `mapstructure:"DbUser"`
 	DbPassword string `mapstructure:"DbPassword"`
 	DbName     string `mapstructure:"DbName"`
 	DbUri      string `mapstructure:"DbUri"`
 	ServerHost string `mapstructure:"ServerHost"`
 	ServerPort string `mapstructure:"ServerPort"`
+	BaseTimeout time.Duration `mapstructure:"BaseTimeout"`
 }
 
 var (
