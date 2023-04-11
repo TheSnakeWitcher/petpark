@@ -12,18 +12,17 @@ var (
 )
 
 func initDB() {
-    DbOpts := fmt.Sprintf(
-        "host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-        Config.DbHost,
-        Config.DbPort,
+    DbUri := fmt.Sprintf(
+        "%s://%s:%s@%s:%d/%s?sslmode=disable",
+        Config.DbProtocol,
         Config.DbUser,
         Config.DbPassword,
+        Config.DbHost,
+        Config.DbPort,
         Config.DbName,
     )
-    fmt.Println(DbOpts)
 
-
-    db ,InitDbErr = sql.Open(Config.DbDriver,Config.DbUri)
+    db ,InitDbErr = sql.Open(Config.DbDriver,DbUri)
     if InitDbErr != nil {
         InitErrCheck(InitDbErr)
     }
