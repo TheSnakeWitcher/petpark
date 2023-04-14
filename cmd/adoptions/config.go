@@ -18,8 +18,6 @@ const (
 )
 
 type configuration struct {
-    AppName    string `mapstructure:"AppName"`
-    AppDomain  string `mapstructure:"AppDomain"`
 	LogFile    string `mapstructure:"LogFile"`
 	DbDriver   string `mapstructure:"DbDriver"`
 	DbProtocol string `mapstructure:"DbProtocol"`
@@ -28,7 +26,6 @@ type configuration struct {
 	DbUser     string `mapstructure:"DbUser"`
 	DbPassword string `mapstructure:"DbPassword"`
 	DbName     string `mapstructure:"DbName"`
-	DbUri      string `mapstructure:"DbUri"`
 	ServerHost string `mapstructure:"ServerHost"`
 	ServerPort string `mapstructure:"ServerPort"`
 	BaseTimeout time.Duration `mapstructure:"BaseTimeout"`

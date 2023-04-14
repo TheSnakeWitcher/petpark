@@ -1,6 +1,6 @@
 package http
 
-import "github.com/TheSnakeWitcher/PetPark/pets"
+import "github.com/TheSnakeWitcher/petpark/pets"
 
 func (srv *Server) InitRoutes(svc pets.Service) {
     srv.GET("/",Root)
