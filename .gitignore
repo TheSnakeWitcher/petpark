@@ -1,9 +1,9 @@
 # directories
 bin/
+util/
 
 # files
 .envrc
-README.md
 
 
 # regular expressions
