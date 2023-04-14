@@ -3,8 +3,8 @@ package main
 
 import (
 	"time"
-	"github.com/TheSnakeWitcher/PetPark/internal/http"
-	"github.com/TheSnakeWitcher/PetPark/pets"
+	"github.com/TheSnakeWitcher/petpark/internal/http"
+	"github.com/TheSnakeWitcher/petpark/pets"
 	mw "github.com/labstack/echo/v4/middleware"
 )
 

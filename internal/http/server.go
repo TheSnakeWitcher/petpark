@@ -1,7 +1,7 @@
 package http
 
 import (
-	"github.com/TheSnakeWitcher/PetPark/pets"
+	"github.com/TheSnakeWitcher/petpark/pets"
 	"github.com/labstack/echo/v4"
 )
 

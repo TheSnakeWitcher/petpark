@@ -18,6 +18,8 @@ const (
 )
 
 type configuration struct {
+    AppName    string `mapstructure:"AppName"`
+    AppDomain  string `mapstructure:"AppDomain"`
 	LogFile    string `mapstructure:"LogFile"`
 	DbDriver   string `mapstructure:"DbDriver"`
 	DbProtocol string `mapstructure:"DbProtocol"`

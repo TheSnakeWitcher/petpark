@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/TheSnakeWitcher/PetPark/pets"
+	"github.com/TheSnakeWitcher/petpark/pets"
 	"github.com/labstack/echo/v4"
 )
 
