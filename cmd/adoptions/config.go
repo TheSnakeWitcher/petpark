@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	ConfigPathDev string = "/home/mr-papi/SoftwareCode/Projects/PetPark/"
+	ConfigPathDev string = "/home/mr-papi/SoftwareCode/Projects/petpark/"
 	ConfigPathSystem string = "/etc/"
 	ConfigPathUser   string = "/home/mr-papi/.config/"
 	ConfigFileName string = "petpark.conf"

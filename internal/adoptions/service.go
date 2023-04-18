@@ -1,4 +1,4 @@
-package pets
+package adoptions
 
 import (
 	"context"
@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 )
+
+type PetService = Querier
 
 type Service struct { *Queries }
 
@@ -21,8 +23,8 @@ func (svc Service) ListPets(ctx context.Context) ([]Pet , error) {
     return pets,nil
 }
 
-func (svc Service) GetPet(ctx context.Context,id string) (Pet,error) {
-    pet , err := svc.Queries.GetPet(ctx,uuid.MustParse(id))
+func (svc Service) GetPet(ctx context.Context,id uuid.UUID) (Pet,error) {
+    pet , err := svc.Queries.GetPet(ctx,id)
     if err != nil {
         return Pet{},err
     }
@@ -34,7 +36,7 @@ func (svc Service) AddPet(ctx context.Context,arg AddPetParams) (sql.Result,erro
     return outPet,err
 }
 
-func (svc Service) DelPet(ctx context.Context,id string) (error) {
-    err := svc.Queries.DelPet(ctx,uuid.MustParse(id))
+func (svc Service) DelPet(ctx context.Context,id uuid.UUID) (error) {
+    err := svc.Queries.DelPet(ctx,id)
     return err
 }
