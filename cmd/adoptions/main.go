@@ -1,11 +1,15 @@
 // TODO: implement super tokens auth integrations
+// TODO: implement api gateway
 package main
 
 import (
-	"time"
-	"github.com/TheSnakeWitcher/petpark/internal/http"
-	"github.com/TheSnakeWitcher/petpark/pets"
-	mw "github.com/labstack/echo/v4/middleware"
+	"fmt"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+
+	"github.com/TheSnakeWitcher/petpark/internal/adoptions"
 )
 
 var (
@@ -31,15 +35,29 @@ func init() {
 
 
 func main() {
+
 	Logger.Trace().Msg("execution starts")
 	defer LogFile.Close()
 	defer db.Close()
 
-    svc := pets.NewService(db)
-    srv := http.NewServer(*svc)
-    srv.Use(mw.TimeoutWithConfig(mw.TimeoutConfig{
-        Timeout: Config.BaseTimeout + time.Second,
-    }))
-    srv.Logger.Fatal(srv.Start(Config.ServerHost + ":" +  Config.ServerPort))
-	Logger.Trace().Msg("execution ends")
+
+    svc := adoptions.NewService(db)
+    srv := adoptions.NewServer(svc)
+
+
+    errs := make(chan error)
+	go func() {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
+		errs <- fmt.Errorf("%s", <-c)
+	}()
+
+	go func() {
+        errs <- http.ListenAndServe(Config.ServerHost + ":" + Config.ServerPort,srv)
+	}()
+
+
+    fmt.Println("listening...")
+    fmt.Println(<-errs)
+
 }
