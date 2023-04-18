@@ -3,21 +3,38 @@
 ##################################################
 BIN=./bin
 
+# ADOPTIONS
+ADOPTIONS_SCHEMA=db/adoptions/schema.sql
+ADOPTIONS_MIGRATIONS=db/adoptions/migrations
 
 ##################################################
 # rules
 ##################################################
+
 build:
 	make build-linux
 	make build-windows
 
 build-linux:
 	go env -w GOOS=linux && go build -o $(BIN)/ ./...
-	mv $(BIN)/api $(BIN)/petpark
 
 build-windows:
 	go env -w GOOS=windows && go build -o $(BIN)/ ./...
-	mv $(BIN)/api.exe $(BIN)/petpark.exe
+
+build-adoptions:
+	go env -w GOOS=linux && go build -o $(BIN)/ ./cmd/adoptions/...
+
+build-bot:
+	go env -w GOOS=linux && go build -o $(BIN)/ ./cmd/bot/...
+
+build-events:
+	go env -w GOOS=linux && go build -o $(BIN)/ ./cmd/events/...
+
+build-news:
+	go env -w GOOS=linux && go build -o $(BIN)/ ./cmd/news/...
+
+build-shop:
+	go env -w GOOS=linux && go build -o $(BIN)/ ./cmd/shop/...
 
 clean:
 	make clean_windows
@@ -35,7 +52,28 @@ run:
 test:
 	go test ./... -v
 
-gen-sql:
+adoptions-db-status:
+	dbmate \
+	--env ADOPTIONS_DB_URL \
+	--schema-file $(ADOPTIONS_SCHEMA) \
+	--migrations-dir $(ADOPTIONS_MIGRATIONS) \
+	status 
+
+adoptions-db-up:
+	dbmate \
+	--env ADOPTIONS_DB_URL \
+	--schema-file $(ADOPTIONS_SCHEMA) \
+	--migrations-dir $(ADOPTIONS_MIGRATIONS) \
+	up
+
+adoptions-db-down:
+	dbmate \
+	--env ADOPTIONS_DB_URL \
+	--schema-file $(ADOPTIONS_SCHEMA) \
+	--migrations-dir $(ADOPTIONS_MIGRATIONS) \
+	down 
+
+adoptions-db-sqlc:
 	sqlc generate
 
 gen-proto:
